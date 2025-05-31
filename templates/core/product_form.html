@@ -1,0 +1,136 @@
+{% extends "base.html" %}
+
+{% block title %}{{ title }} - Kiyim WMS{% endblock %}
+
+{% block header_title %}{{ title }}{% endblock %}
+
+{% block content %}
+<div class="bg-white shadow overflow-hidden sm:rounded-lg">
+    <div class="px-4 py-5 sm:px-6">
+        <h2 class="text-lg leading-6 font-medium text-gray-900">{{ title }}</h2>
+        <p class="mt-1 max-w-2xl text-sm text-gray-500">
+            {% if form.instance.pk %}Mahsulotni yangilash{% else %}Yangi mahsulot yaratish{% endif %}
+        </p>
+    </div>
+    
+    <div class="border-t border-gray-200">
+        <form method="post" enctype="multipart/form-data" class="divide-y divide-gray-200">
+            {% csrf_token %}
+            
+            <div class="px-4 py-5 sm:p-6">
+                <div class="grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
+                    <!-- Name -->
+                    <div class="sm:col-span-3">
+                        <label for="{{ form.name.id_for_label }}" class="block text-sm font-medium text-gray-700">
+                            Mahsulot nomi
+                        </label>
+                        <div class="mt-1">
+                            {{ form.name }}
+                            {% if form.name.errors %}
+                                <p class="mt-2 text-sm text-red-600">{{ form.name.errors.0 }}</p>
+                            {% endif %}
+                        </div>
+                    </div>
+                    
+                    <!-- Category -->
+                    <div class="sm:col-span-3">
+                        <label for="{{ form.category.id_for_label }}" class="block text-sm font-medium text-gray-700">
+                            Kategoriya
+                        </label>
+                        <div class="mt-1">
+                            {{ form.category }}
+                            {% if form.category.errors %}
+                                <p class="mt-2 text-sm text-red-600">{{ form.category.errors.0 }}</p>
+                            {% endif %}
+                        </div>
+                    </div>
+                    
+                    <!-- Price -->
+                    <div class="sm:col-span-2">
+                        <label for="{{ form.price.id_for_label }}" class="block text-sm font-medium text-gray-700">
+                            Narxi
+                        </label>
+                        <div class="mt-1 relative rounded-md shadow-sm">
+                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                <span class="text-gray-500 sm:text-sm">$</span>
+                            </div>
+                            {{ form.price }}
+                            {% if form.price.errors %}
+                                <p class="mt-2 text-sm text-red-600">{{ form.price.errors.0 }}</p>
+                            {% endif %}
+                        </div>
+                    </div>
+                    
+                    <!-- Size -->
+                    <div class="sm:col-span-2">
+                        <label for="{{ form.size.id_for_label }}" class="block text-sm font-medium text-gray-700">
+                            O‘lchami
+                        </label>
+                        <div class="mt-1">
+                            {{ form.size }}
+                            {% if form.size.errors %}
+                                <p class="mt-2 text-sm text-red-600">{{ form.size.errors.0 }}</p>
+                            {% endif %}
+                        </div>
+                    </div>
+                    
+                    <!-- Color -->
+                    <div class="sm:col-span-2">
+                        <label for="{{ form.color.id_for_label }}" class="block text-sm font-medium text-gray-700">
+                            Rangi
+                        </label>
+                        <div class="mt-1">
+                            {{ form.color }}
+                            {% if form.color.errors %}
+                                <p class="mt-2 text-sm text-red-600">{{ form.color.errors.0 }}</p>
+                            {% endif %}
+                        </div>
+                    </div>
+                    
+                    <!-- Description -->
+                    <div class="sm:col-span-6">
+                        <label for="{{ form.description.id_for_label }}" class="block text-sm font-medium text-gray-700">
+                            Tavsif
+                        </label>
+                        <div class="mt-1">
+                            {{ form.description }}
+                            {% if form.description.errors %}
+                                <p class="mt-2 text-sm text-red-600">{{ form.description.errors.0 }}</p>
+                            {% endif %}
+                        </div>
+                    </div>
+                    
+                    <!-- Image -->
+                    <div class="sm:col-span-6">
+                        <label for="{{ form.image.id_for_label }}" class="block text-sm font-medium text-gray-700">
+                            Mahsulot rasmi
+                        </label>
+                        <div class="mt-1 flex items-center">
+                            {% if form.instance.image %}
+                                <div class="mr-4">
+                                    <img src="{{ form.instance.image.url }}" alt="{{ form.instance.name }}" class="h-24 w-24 object-cover rounded-md">
+                                </div>
+                            {% endif %}
+                            <div class="flex-grow">
+                                {{ form.image }}
+                                {% if form.image.errors %}
+                                    <p class="mt-2 text-sm text-red-600">{{ form.image.errors.0 }}</p>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="px-4 py-3 bg-gray-50 text-right sm:px-6">
+                <a href="{% url 'product_list' %}" class="inline-flex justify-center py-2 px-4 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 mr-2">
+                    Bekor qilish
+                </a>
+                <button type="submit" class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500">
+                    Saqlash
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

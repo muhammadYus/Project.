@@ -1,0 +1,12 @@
+# Bu yerda db alohida emas, SQLite fayl o'z ichida bo'ladi
+
+services:
+  web:
+    build: .
+    volumes:
+      - .:/app
+    ports:
+      - "8000:8000"
+    environment:
+      - PYTHONDONTWRITEBYTECODE=1
+      - PYTHONUNBUFFERED=1

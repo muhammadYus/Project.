@@ -1,0 +1,68 @@
+# Python
+__pycache__/
+*.py[cod]
+*.so
+*.egg
+*.egg-info/
+dist/
+build/
+*.log
+
+# Django
+*.sqlite3
+db.sqlite3
+media/
+staticfiles/
+.env
+*.env
+secret.json
+
+# macOS / Windows
+.DS_Store
+Thumbs.db
+
+# VSCode / IDE'lar
+.vscode/
+.idea/
+*.swp
+
+# Virtual environment
+venv/
+.env/
+ENV/
+env/
+*.pyo
+
+# Git
+*.orig
+*.rej
+
+# Pip
+pip-log.txt
+
+# Coverage
+.coverage
+htmlcov/
+.coverage.*
+
+# Migrations cache (may not be necessary but often added)
+**/migrations/__pycache__/
+
+# Docker (agar ishlatilayotgan bo‘lsa)
+*.pid
+docker-compose.override.yml
+
+# AWS uchun maxsus (EB yoki EC2)
+.elasticbeanstalk/
+.ebextensions/*.bak
+*.pem
+*.key
+
+# Node/npm (agar front-end ham bo‘lsa)
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Static collect
+static/

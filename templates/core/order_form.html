@@ -1,0 +1,224 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}{{ title }} - Kiym-kechak WMS{% endblock %}
+
+{% block header_title %}{{ title }}{% endblock %}
+
+{% block content %}
+<div class="bg-white shadow overflow-hidden sm:rounded-lg">
+    <div class="px-4 py-5 sm:px-6">
+        <h2 class="text-lg leading-6 font-medium text-gray-900">{{ title }}</h2>
+        <p class="mt-1 max-w-2xl text-sm text-gray-500">
+            {% if form.instance.pk %}Buyurtmani yangilash{% else %}Yangi buyurtma yaratish{% endif %}
+        </p>
+    </div>
+    
+    <div class="border-t border-gray-200">
+        <form method="post" class="divide-y divide-gray-200">
+            {% csrf_token %}
+            
+            <div class="px-4 py-5 sm:p-6">
+                <div class="grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
+                    <!-- Customer -->
+                    <div class="sm:col-span-3">
+                        <label for="{{ form.customer.id_for_label }}" class="block text-sm font-medium text-gray-700">
+                            Mijoz
+                        </label>
+                        <div class="mt-1">
+                            {{ form.customer }}
+                            {% if form.customer.errors %}
+                                <p class="mt-2 text-sm text-red-600">{{ form.customer.errors.0 }}</p>
+                            {% endif %}
+                        </div>
+                    </div>
+                    
+                    <!-- Status -->
+                    <div class="sm:col-span-3">
+                        <label for="{{ form.status.id_for_label }}" class="block text-sm font-medium text-gray-700">
+                            Holat
+                        </label>
+                        <div class="mt-1">
+                            {{ form.status }}
+                            {% if form.status.errors %}
+                                <p class="mt-2 text-sm text-red-600">{{ form.status.errors.0 }}</p>
+                            {% endif %}
+                        </div>
+                    </div>
+                    
+                    <!-- Notes -->
+                    <div class="sm:col-span-6">
+                        <label for="{{ form.notes.id_for_label }}" class="block text-sm font-medium text-gray-700">
+                            Izohlar
+                        </label>
+                        <div class="mt-1">
+                            {{ form.notes }}
+                            {% if form.notes.errors %}
+                                <p class="mt-2 text-sm text-red-600">{{ form.notes.errors.0 }}</p>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Order Items -->
+            <div class="px-4 py-5 sm:p-6">
+                <h3 class="text-lg leading-6 font-medium text-gray-900 mb-4">Buyurtma tarkibi</h3>
+                
+                {{ formset.management_form }}
+                
+                <div id="order-items">
+                    <div class="grid grid-cols-12 gap-4 mb-2 font-medium text-sm text-gray-700">
+                        <div class="col-span-5">Mahsulot</div>
+                        <div class="col-span-3">Narxi</div>
+                        <div class="col-span-2">Miqdori</div>
+                        <div class="col-span-2">Amallar</div>
+                    </div>
+                    
+                    {% for form in formset.forms %}
+                        <div class="order-item grid grid-cols-12 gap-4 mb-4 items-center">
+                            {% for hidden in form.hidden_fields %}
+                                {{ hidden }}
+                            {% endfor %}
+                            
+                            <div class="col-span-5">
+                                {{ form.product }}
+                                {% if form.product.errors %}
+                                    <p class="mt-1 text-sm text-red-600">{{ form.product.errors.0 }}</p>
+                                {% endif %}
+                            </div>
+                            
+                            <div class="col-span-3">
+                                <div class="relative rounded-md shadow-sm">
+                                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                        <span class="text-gray-500 sm:text-sm">₽</span>
+                                    </div>
+                                    {{ form.price }}
+                                    {% if form.price.errors %}
+                                        <p class="mt-1 text-sm text-red-600">{{ form.price.errors.0 }}</p>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            
+                            <div class="col-span-2">
+                                {{ form.quantity }}
+                                {% if form.quantity.errors %}
+                                    <p class="mt-1 text-sm text-red-600">{{ form.quantity.errors.0 }}</p>
+                                {% endif %}
+                            </div>
+                            
+                            <div class="col-span-2 flex items-center">
+                                {% if form.instance.pk %}
+                                    <div class="flex items-center">
+                                        <label class="inline-flex items-center">
+                                            {{ form.DELETE }}
+                                            <span class="ml-2 text-sm text-red-600">O‘chirish</span>
+                                        </label>
+                                    </div>
+                                {% else %}
+                                    <button type="button" class="remove-item text-red-600 hover:text-red-900">
+                                        <i class="fas fa-trash"></i> O‘chirish
+                                    </button>
+                                {% endif %}
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+                
+                <div class="mt-4">
+                    <button type="button" id="add-item" class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500">
+                        <i class="fas fa-plus mr-2"></i> Element qo‘shish
+                    </button>
+                </div>
+            </div>
+            
+            <div class="px-4 py-3 bg-gray-50 text-right sm:px-6">
+                <a href="{% if form.instance.pk %}{% url 'order_detail' form.instance.pk %}{% else %}{% url 'order_list' %}{% endif %}" class="inline-flex justify-center py-2 px-4 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 mr-2">
+                    Bekor qilish
+                </a>
+                <button type="submit" class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500">
+                    Buyurtmani saqlash
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const orderItems = document.getElementById('order-items');
+        const addItemBtn = document.getElementById('add-item');
+        const totalForms = document.getElementById('id_items-TOTAL_FORMS');
+        
+        // Yangi element qo'shish
+        addItemBtn.addEventListener('click', function() {
+            const formCount = parseInt(totalForms.value);
+            const newItem = orderItems.querySelector('.order-item').cloneNode(true);
+            
+            // Form indeksini yangilash
+            newItem.innerHTML = newItem.innerHTML.replace(/-(\d+)-/g, `-${formCount}-`);
+            newItem.innerHTML = newItem.innerHTML.replace(/_(\d+)_/g, `_${formCount}_`);
+            
+            // Qiymatlarni tozalash
+            newItem.querySelectorAll('input[type="text"], input[type="number"], select').forEach(input => {
+                input.value = '';
+            });
+            
+            // O'chirish tugmasi uchun event qo'shish
+            const removeBtn = newItem.querySelector('.remove-item');
+            if (removeBtn) {
+                removeBtn.addEventListener('click', function() {
+                    newItem.remove();
+                    updateFormCount();
+                });
+            }
+            
+            // Formga qo'shish
+            orderItems.appendChild(newItem);
+            totalForms.value = formCount + 1;
+            
+            // Mahsulot tanlanganda narxni yangilash uchun event
+            const productSelect = newItem.querySelector('select[name$="-product"]');
+            if (productSelect) {
+                productSelect.addEventListener('change', function() {
+                    fetchProductPrice(productSelect);
+                });
+            }
+        });
+        
+        // Elementni o'chirish
+        document.querySelectorAll('.remove-item').forEach(btn => {
+            btn.addEventListener('click', function() {
+                this.closest('.order-item').remove();
+                updateFormCount();
+            });
+        });
+        
+        // Formlar sonini yangilash
+        function updateFormCount() {
+            const formCount = orderItems.querySelectorAll('.order-item').length;
+            totalForms.value = formCount;
+        }
+        
+        // Mahsulot tanlanganda narx olish (placeholder)
+        function fetchProductPrice(productSelect) {
+            const productId = productSelect.value;
+            if (!productId) return;
+            
+            const priceInput = productSelect.closest('.order-item').querySelector('input[name$="-price"]');
+            
+            // Bu yerda odatda AJAX so'rov bo'ladi, hozircha placeholder narx
+            priceInput.value = '19.99';
+        }
+        
+        // Mavjud elementlarga mahsulot o'zgarganda narxni yangilash eventini qo'shish
+        document.querySelectorAll('select[name$="-product"]').forEach(select => {
+            select.addEventListener('change', function() {
+                fetchProductPrice(select);
+            });
+        });
+    });
+</script>
+{% endblock %}

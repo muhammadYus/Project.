@@ -1,0 +1,473 @@
+{% extends "base.html" %}
+
+{% block title %}Boshqaruv paneli - Kiyim WMS{% endblock %}
+
+{% block header_title %}Boshqaruv paneli{% endblock %}
+
+{% block content %}
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+    <!-- Total Sales Card -->
+    <div class="bg-white rounded-xl shadow-soft hover:shadow-hover border border-primary-100 overflow-hidden card-stats">
+        <div class="px-6 py-5">
+            <div class="flex items-center">
+                <div class="flex-shrink-0 bg-gradient-to-r from-primary-500 to-primary-600 rounded-lg p-3 shadow-md">
+                    <i class="fas fa-dollar-sign text-white text-xl"></i>
+                </div>
+                <div class="ml-5 w-0 flex-1">
+                    <dl>
+                        <dt class="text-sm font-medium text-gray-500 truncate">
+                            Umumiy savdo
+                        </dt>
+                        <dd class="flex items-baseline">
+                            <div class="text-2xl font-bold text-gray-800">
+                                ${{ total_sales|floatformat:2 }}
+                            </div>
+                            <div class="ml-2 flex items-baseline text-sm font-semibold {% if total_sales_change >= 0 %}text-green-600{% else %}text-red-600{% endif %}">
+                                {% if total_sales_change >= 0 %}
+                                    <i class="fas fa-arrow-up mr-1"></i>
+                                {% else %}
+                                    <i class="fas fa-arrow-down mr-1"></i>
+                                {% endif %}
+                                {{ total_sales_change|floatformat:1 }}%
+                            </div>
+                        </dd>
+                    </dl>
+                </div>
+            </div>
+        </div>
+        <div class="bg-primary-50 px-6 py-2">
+            <div class="text-xs text-primary-700 flex justify-between items-center">
+                <span>Oylik o'sish</span>
+                <span class="font-medium">{{ total_sales_change|floatformat:1 }}%</span>
+            </div>
+            <div class="w-full bg-gray-200 rounded-full h-1.5 mt-1">
+                <div class="bg-primary-500 h-1.5 rounded-full" style="width: {% if total_sales_change >= 0 %}{{ total_sales_change }}{% else %}0{% endif %}%"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Total Orders Card -->
+    <div class="bg-white rounded-xl shadow-soft hover:shadow-hover border border-primary-100 overflow-hidden card-stats">
+        <div class="px-6 py-5">
+            <div class="flex items-center">
+                <div class="flex-shrink-0 bg-gradient-to-r from-indigo-500 to-indigo-600 rounded-lg p-3 shadow-md">
+                    <i class="fas fa-shopping-cart text-white text-xl"></i>
+                </div>
+                <div class="ml-5 w-0 flex-1">
+                    <dl>
+                        <dt class="text-sm font-medium text-gray-500 truncate">
+                            Buyurtmalar soni
+                        </dt>
+                        <dd class="flex items-baseline">
+                            <div class="text-2xl font-bold text-gray-800">
+                                {{ total_orders }}
+                            </div>
+                            <div class="ml-2 flex items-baseline text-sm font-semibold {% if total_orders_change >= 0 %}text-green-600{% else %}text-red-600{% endif %}">
+                                {% if total_orders_change >= 0 %}
+                                    <i class="fas fa-arrow-up mr-1"></i>
+                                {% else %}
+                                    <i class="fas fa-arrow-down mr-1"></i>
+                                {% endif %}
+                                {{ total_orders_change|floatformat:1 }}%
+                            </div>
+                        </dd>
+                    </dl>
+                </div>
+            </div>
+        </div>
+        <div class="bg-indigo-50 px-6 py-2">
+            <div class="text-xs text-indigo-700 flex justify-between items-center">
+                <span>Oylik o'sish</span>
+                <span class="font-medium">{{ total_orders_change|floatformat:1 }}%</span>
+            </div>
+            <div class="w-full bg-gray-200 rounded-full h-1.5 mt-1">
+                <div class="bg-indigo-500 h-1.5 rounded-full" style="width: {% if total_orders_change >= 0 %}{{ total_orders_change }}{% else %}0{% endif %}%"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Products Card -->
+    <div class="bg-white rounded-xl shadow-soft hover:shadow-hover border border-primary-100 overflow-hidden card-stats">
+        <div class="px-6 py-5">
+            <div class="flex items-center">
+                <div class="flex-shrink-0 bg-gradient-to-r from-green-500 to-green-600 rounded-lg p-3 shadow-md">
+                    <i class="fas fa-tshirt text-white text-xl"></i>
+                </div>
+                <div class="ml-5 w-0 flex-1">
+                    <dl>
+                        <dt class="text-sm font-medium text-gray-500 truncate">
+                            Mahsulotlar
+                        </dt>
+                        <dd class="text-2xl font-bold text-gray-800">
+                            {{ product_count }}
+                        </dd>
+                    </dl>
+                </div>
+            </div>
+        </div>
+        <div class="bg-green-50 px-6 py-2">
+            <div class="text-xs text-green-700 flex justify-between items-center">
+                <span>Kategoriyalar</span>
+                <span class="font-medium">{{ category_count }}</span>
+            </div>
+            <div class="w-full bg-gray-200 rounded-full h-1.5 mt-1">
+                <div class="bg-green-500 h-1.5 rounded-full" style="width: 100%"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Customers Card -->
+    <div class="bg-white rounded-xl shadow-soft hover:shadow-hover border border-primary-100 overflow-hidden card-stats">
+        <div class="px-6 py-5">
+            <div class="flex items-center">
+                <div class="flex-shrink-0 bg-gradient-to-r from-purple-500 to-purple-600 rounded-lg p-3 shadow-md">
+                    <i class="fas fa-users text-white text-xl"></i>
+                </div>
+                <div class="ml-5 w-0 flex-1">
+                    <dl>
+                        <dt class="text-sm font-medium text-gray-500 truncate">
+                            Mijozlar
+                        </dt>
+                        <dd class="flex items-baseline">
+                            <div class="text-2xl font-bold text-gray-800">
+                                {{ customer_count }}
+                            </div>
+                            {% if new_customers_today > 0 %}
+                                <div class="ml-2 flex items-baseline text-sm font-semibold text-green-600">
+                                    <i class="fas fa-user-plus mr-1"></i>
+                                    +{{ new_customers_today }} bugun
+                                </div>
+                            {% endif %}
+                        </dd>
+                    </dl>
+                </div>
+            </div>
+        </div>
+        <div class="bg-purple-50 px-6 py-2">
+            <div class="text-xs text-purple-700 flex justify-between items-center">
+                <span>Yangi mijozlar</span>
+                <span class="font-medium">+{{ new_customers_today }} bugun</span>
+            </div>
+            <div class="w-full bg-gray-200 rounded-full h-1.5 mt-1">
+                <div class="bg-purple-500 h-1.5 rounded-full" style="width: {% if customer_count > 0 %}{{ new_customers_today|default:0|floatformat:0 }}{% else %}0{% endif %}%"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+    <!-- Sales Chart -->
+    <div class="bg-white shadow-soft hover:shadow-hover rounded-xl p-6 border border-primary-100">
+        <div class="flex justify-between items-center mb-6">
+            <h2 class="text-lg font-semibold text-gray-900">Savdo tendensiyasi</h2>
+            <div class="flex space-x-2">
+                <button class="px-3 py-1 text-xs bg-primary-100 text-primary-700 rounded-md hover:bg-primary-200">Haftalik</button>
+                <button class="px-3 py-1 text-xs bg-gray-100 text-gray-700 rounded-md hover:bg-gray-200">Oylik</button>
+                <button class="px-3 py-1 text-xs bg-gray-100 text-gray-700 rounded-md hover:bg-gray-200">Yillik</button>
+            </div>
+        </div>
+        <div class="h-64">
+            <canvas id="salesChart"></canvas>
+        </div>
+    </div>
+
+    <!-- Top Products Chart -->
+    <div class="bg-white shadow-soft hover:shadow-hover rounded-xl p-6 border border-primary-100">
+        <div class="flex justify-between items-center mb-6">
+            <h2 class="text-lg font-semibold text-gray-900">Eng ko'p sotilgan mahsulotlar</h2>
+            <div class="bg-primary-100 text-primary-700 px-3 py-1 rounded-md text-xs font-medium">
+                Top 5
+            </div>
+        </div>
+        <div class="h-64">
+            <canvas id="topProductsChart"></canvas>
+        </div>
+    </div>
+</div>
+
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+    <!-- Recent Orders -->
+    <div class="bg-white shadow-soft hover:shadow-hover rounded-xl border border-primary-100 overflow-hidden">
+        <div class="px-6 py-5 border-b border-gray-100">
+            <div class="flex justify-between items-center">
+                <h3 class="text-lg font-semibold text-gray-900">
+                    Yaqinda berilgan buyurtmalar
+                </h3>
+                <span class="bg-primary-100 text-primary-700 px-3 py-1 rounded-full text-xs font-medium">
+                    Bugun: {{ today_orders_count }}
+                </span>
+            </div>
+        </div>
+        <div class="divide-y divide-gray-100">
+            {% for order in recent_orders %}
+                <div class="px-6 py-4 hover:bg-gray-50 transition-colors duration-150">
+                    <div class="flex items-center justify-between">
+                        <p class="text-sm font-medium text-primary-600 truncate">
+                            {{ order.order_number }}
+                        </p>
+                        <div class="ml-2 flex-shrink-0 flex">
+                            <p class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full
+                                {% if order.status == 'delivered' %}bg-green-100 text-green-800
+                                {% elif order.status == 'cancelled' %}bg-red-100 text-red-800
+                                {% elif order.status == 'processing' %}bg-yellow-100 text-yellow-800
+                                {% elif order.status == 'shipped' %}bg-blue-100 text-blue-800
+                                {% else %}bg-gray-100 text-gray-800{% endif %}">
+                                {{ order.get_status_display }}
+                            </p>
+                        </div>
+                    </div>
+                    <div class="mt-2 sm:flex sm:justify-between">
+                        <div class="sm:flex">
+                            <p class="flex items-center text-sm text-gray-500">
+                                <i class="fas fa-user flex-shrink-0 mr-1.5 text-gray-400"></i>
+                                {{ order.customer.name }}
+                            </p>
+                        </div>
+                        <div class="mt-2 flex items-center text-sm text-gray-500 sm:mt-0">
+                            <i class="fas fa-calendar flex-shrink-0 mr-1.5 text-gray-400"></i>
+                            <p>
+                                {{ order.order_date|date:"M d, Y" }}
+                            </p>
+                            <p class="ml-4 font-medium text-gray-900">${{ order.total_amount|floatformat:2 }}</p>
+                        </div>
+                    </div>
+                    <div class="mt-2">
+                        <a href="{% url 'order_detail' order.pk %}" class="text-sm text-primary-600 hover:text-primary-800 flex items-center">
+                            Batafsil ko'rish
+                            <i class="fas fa-chevron-right ml-1 text-xs"></i>
+                        </a>
+                    </div>
+                </div>
+            {% empty %}
+                <div class="px-6 py-8 text-center text-gray-500">
+                    <i class="fas fa-inbox text-4xl text-gray-300 mb-3"></i>
+                    <p>Yaqinda buyurtma yo'q</p>
+                </div>
+            {% endfor %}
+        </div>
+        <div class="bg-gray-50 px-6 py-3 border-t border-gray-100">
+            <a href="{% url 'order_list' %}" class="text-sm font-medium text-primary-600 hover:text-primary-800 flex items-center justify-center">
+                Barcha buyurtmalarni ko'rish
+                <i class="fas fa-arrow-right ml-2"></i>
+            </a>
+        </div>
+    </div>
+
+    <!-- Low Stock Items -->
+    <div class="bg-white shadow-soft hover:shadow-hover rounded-xl border border-primary-100 overflow-hidden">
+        <div class="px-6 py-5 border-b border-gray-100">
+            <div class="flex justify-between items-center">
+                <h3 class="text-lg font-semibold text-gray-900">
+                    Kam zaxirada mahsulotlar
+                </h3>
+                {% if low_stock_count > 0 %}
+                <span class="bg-red-100 text-red-700 px-3 py-1 rounded-full text-xs font-medium pulse-animation">
+                    {{ low_stock_count }} ta mahsulot
+                </span>
+                {% else %}
+                <span class="bg-green-100 text-green-700 px-3 py-1 rounded-full text-xs font-medium">
+                    Barcha mahsulotlar yetarli
+                </span>
+                {% endif %}
+            </div>
+        </div>
+        <div class="divide-y divide-gray-100">
+            {% for item in low_stock_items %}
+                <div class="px-6 py-4 hover:bg-gray-50 transition-colors duration-150">
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center">
+                            {% if item.product.image %}
+                            <img src="{{ item.product.image.url }}" alt="{{ item.product.name }}" class="w-10 h-10 rounded-lg object-cover border border-gray-200">
+                            {% else %}
+                            <div class="w-10 h-10 rounded-lg bg-gray-100 flex items-center justify-center">
+                                <i class="fas fa-tshirt text-gray-400"></i>
+                            </div>
+                            {% endif %}
+                            <p class="ml-3 text-sm font-medium text-gray-900 truncate">
+                                {{ item.product.name }}
+                            </p>
+                        </div>
+                        <div class="ml-2 flex-shrink-0 flex">
+                            <p class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">
+                                Kam zaxira
+                            </p>
+                        </div>
+                    </div>
+                    <div class="mt-2 sm:flex sm:justify-between">
+                        <div class="sm:flex">
+                            <p class="flex items-center text-sm text-gray-500">
+                                <i class="fas fa-tag flex-shrink-0 mr-1.5 text-gray-400"></i>
+                                {{ item.product.category.name }}
+                            </p>
+                        </div>
+                        <div class="mt-2 flex items-center text-sm sm:mt-0">
+                            <p class="text-red-600 font-medium">
+                                {{ item.quantity }} dona qoldi
+                            </p>
+                            <span class="mx-2 text-gray-300">|</span>
+                            <p class="text-gray-500">
+                                Min: {{ item.restock_level }}
+                            </p>
+                        </div>
+                    </div>
+                    <div class="mt-3">
+                        <div class="w-full bg-gray-200 rounded-full h-1.5">
+                            <div class="bg-red-500 h-1.5 rounded-full" style="width: {% if item.restock_level > 0 %}{{ item.quantity|floatformat:0|default:0 }}{% else %}0{% endif %}%"></div>
+                        </div>
+                    </div>
+                    <div class="mt-2">
+                        <a href="{% url 'inventory_edit' item.pk %}" class="text-sm text-primary-600 hover:text-primary-800 flex items-center">
+                            Inventarizatsiyani yangilash
+                            <i class="fas fa-chevron-right ml-1 text-xs"></i>
+                        </a>
+                    </div>
+                </div>
+            {% empty %}
+                <div class="px-6 py-8 text-center text-gray-500">
+                    <i class="fas fa-check-circle text-4xl text-green-400 mb-3"></i>
+                    <p>Kam zaxirada mahsulot yo'q</p>
+                </div>
+            {% endfor %}
+        </div>
+        <div class="bg-gray-50 px-6 py-3 border-t border-gray-100">
+            <a href="{% url 'inventory_list' %}?stock=low" class="text-sm font-medium text-primary-600 hover:text-primary-800 flex items-center justify-center">
+                Barcha kam zaxirada mahsulotlarni ko'rish
+                <i class="fas fa-arrow-right ml-2"></i>
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Sales Chart
+    fetch('{% url "sales_data" %}')
+        .then(response => response.json())
+        .then(data => {
+            const dates = data.map(item => item.date);
+            const amounts = data.map(item => item.amount);
+
+            const ctx = document.getElementById('salesChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: dates,
+                    datasets: [{
+                        label: 'Savdo',
+                        data: amounts,
+                        backgroundColor: 'rgba(34, 197, 94, 0.2)',
+                        borderColor: 'rgba(22, 163, 74, 1)',
+                        borderWidth: 2,
+                        tension: 0.4,
+                        fill: true,
+                        pointBackgroundColor: 'rgba(22, 163, 74, 1)',
+                        pointBorderColor: '#fff',
+                        pointBorderWidth: 2,
+                        pointRadius: 4,
+                        pointHoverRadius: 6
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            grid: {
+                                color: 'rgba(0, 0, 0, 0.05)'
+                            },
+                            ticks: {
+                                callback: function(value) {
+                                    return '$' + value;
+                                }
+                            }
+                        },
+                        x: {
+                            grid: {
+                                display: false
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        tooltip: {
+                            backgroundColor: 'rgba(255, 255, 255, 0.9)',
+                            titleColor: '#000',
+                            bodyColor: '#666',
+                            borderColor: 'rgba(22, 163, 74, 0.3)',
+                            borderWidth: 1,
+                            displayColors: false,
+                            callbacks: {
+                                label: function(context) {
+                                    return '$' + context.parsed.y;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        });
+
+    // Top Products Chart
+    fetch('{% url "top_products" %}')
+        .then(response => response.json())
+        .then(data => {
+            const products = data.map(item => item.product__name);
+            const quantities = data.map(item => item.total_sold);
+
+            const ctx = document.getElementById('topProductsChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: products,
+                    datasets: [{
+                        label: 'Sotilgan birliklar',
+                        data: quantities,
+                        backgroundColor: [
+                            'rgba(22, 163, 74, 0.7)',
+                            'rgba(79, 70, 229, 0.7)',
+                            'rgba(16, 185, 129, 0.7)',
+                            'rgba(245, 158, 11, 0.7)',
+                            'rgba(239, 68, 68, 0.7)'
+                        ],
+                        borderRadius: 6,
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            grid: {
+                                color: 'rgba(0, 0, 0, 0.05)'
+                            }
+                        },
+                        x: {
+                            grid: {
+                                display: false
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        tooltip: {
+                            backgroundColor: 'rgba(255, 255, 255, 0.9)',
+                            titleColor: '#000',
+                            bodyColor: '#666',
+                            borderColor: 'rgba(22, 163, 74, 0.3)',
+                            borderWidth: 1,
+                            displayColors: false
+                        }
+                    }
+                }
+            });
+        });
+</script>
+{% endblock %}

@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+
+{% block title %}{{ object_name }}ni o‘chirish - Kiyim-kechak WMS{% endblock %}
+
+{% block header_title %}{{ object_name }}ni o‘chirish{% endblock %}
+
+{% block content %}
+<div class="bg-white shadow-md sm:rounded-xl transition-all duration-300 hover:shadow-lg">
+    <div class="px-6 py-6 sm:p-8">
+        <h3 class="text-xl font-semibold text-red-600">{{ object_name }}ni o‘chirish</h3>
+        <div class="mt-2 max-w-2xl text-sm text-gray-600">
+            <p>
+                Rostdan ham <strong>{{ object_name|lower }}</strong>ni o‘chirmoqchimisiz?
+                <br>
+                <span class="text-red-500">Bu amalni ortga qaytarib bo‘lmaydi.</span>
+            </p>
+        </div>
+
+        <div class="mt-6">
+            <form method="post">
+                {% csrf_token %}
+                <div class="flex space-x-3">
+                    <a href="javascript:history.back()" class="inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-400">
+                        Bekor qilish
+                    </a>
+                    <button type="submit" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">
+                        <i class="fas fa-trash mr-2"></i> O‘chirish
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
